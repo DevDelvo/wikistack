@@ -2,26 +2,26 @@ const express = require("express");
 
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-const layout = require("./views/layout");
-const db = require("./models");
+const layOut = require("./views/layout");
+const { Page, User, db } = require("./models");
+const path = require('path');
+const wikiRouter = require('./routes/wiki');
+const userRouter = require('./routes/user');
 
-const app = express();
+const app = express(); //creates middleware app
 
-app.use(morgan("dev"));
-// app.use(express.static(__dirname + "/public"));
+app.use(morgan("dev")); //logging middleware
+app.use(express.static(path.join(__dirname, "/public")));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-db.authenticate().then(() => {
-  console.log('connected to the database');
-})
 
 // main route
 app.get("/", (req, res, next) => {
-  res.send(layout());
-  console.log("Hello World!");
+  res.redirect('/wiki');
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-});
+app.use('/wiki', wikiRouter);
+app.use('/user', userRouter);
+
+module.exports = app;
