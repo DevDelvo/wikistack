@@ -22,6 +22,6 @@ app.get("/", (req, res, next) => {
 });
 
 app.use('/wiki', wikiRouter);
-app.use('/user', userRouter);
+app.use('/users', userRouter);
 
 module.exports = app;
